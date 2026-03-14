@@ -1,0 +1,55 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Resolve release metadata
+        id: meta
+        run: |
+          package_version="$(node -p 'require("./package.json").version')"
+          echo "package_version=$package_version" >> "$GITHUB_OUTPUT"
+          echo "tag_version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Check version matches tag
+        run: test "${{ steps.meta.outputs.package_version }}" = "${{ steps.meta.outputs.tag_version }}"
+
+      - name: Check if version is already published
+        id: npm_check
+        run: |
+          if npm view "create-nudocs@${{ steps.meta.outputs.package_version }}" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check package contents
+        if: steps.npm_check.outputs.published != 'true'
+        run: npm pack --dry-run
+
+      - name: Publish to npm
+        if: steps.npm_check.outputs.published != 'true'
+        run: npm publish --tag latest
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Skip existing version
+        if: steps.npm_check.outputs.published == 'true'
+        run: echo "create-nudocs@${{ steps.meta.outputs.package_version }} is already published, skipping."
