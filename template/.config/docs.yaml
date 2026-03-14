@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://unpkg.com/nudocs/schema/config.json
+
+name: "__PROJECT_NAME__"
+shortDescription: "Documentation for __PROJECT_NAME__."
+description: "Documentation for __PROJECT_NAME__."
+github: "__GITHUB_REPO__"
+# url: "https://__PROJECT_SLUG__.example.com"
+# redirects:
+#   "/from": "/to"
+# automd: true
+landing:
+  heroLinks:
+    primary:
+      icon: "i-heroicons-book-open"
+      to: "/docs"

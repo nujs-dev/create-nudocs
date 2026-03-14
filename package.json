@@ -1,0 +1,18 @@
+{
+  "name": "create-nudocs",
+  "version": "0.0.1",
+  "description": "Create a NuDocs project",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "create-nudocs": "./bin/create-nudocs.mjs"
+  },
+  "files": [
+    "bin",
+    "template",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

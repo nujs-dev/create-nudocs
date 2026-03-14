@@ -1,0 +1,11 @@
+{
+  "name": "docs",
+  "private": true,
+  "scripts": {
+    "dev": "nudocs dev",
+    "build": "nudocs build"
+  },
+  "devDependencies": {
+    "nudocs": "latest"
+  }
+}
